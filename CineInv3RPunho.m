@@ -18,7 +18,7 @@ POSE2 = [
  0  0  1  0.75;
  0  0  0    1]; % Posição home, entretanto com theta2=30° | theta5 = 60°
 
-POSE=POSE1;%Escolha da pose
+POSE=POSE2;%Escolha da pose
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Primeiro achar o centro do punho
@@ -56,28 +56,17 @@ theta2(4) = pi-theta2(2);                                                       
 % A - Punho Normal
 % B - Punho Invertido
 
-% Calculo de R36
-R = POSE([1 2 3], [1 2 3]);
-for i = 1:4
-    R03(:,:) = [
-        cos(theta1(i))*cos(theta2(i)+theta3(i)) -cos(theta1(i))*sin(theta2(i)+theta3(i))  sin(theta1(i));
-        sin(theta1(i))*cos(theta2(i)+theta3(i)) -sin(theta1(i))*sin(theta2(i)+theta3(i)) -cos(theta1(i));
-                       sin(theta2(i)+theta3(i))                 cos(theta2(i)+theta3(i))               0;
-    ];
-    R36(:,:,i) = (R03.') * R;
-end
-
 % Calculo dos Theta
 for i = 1:4
-    theta4(i) = atan2( -cos(theta1(i))*sin(theta2(i)+theta3(i))*R36(1,3,i) - sin(theta1(i))*sin(theta2(i)+theta3(i))*R36(2,3,i) + cos(theta2(i)+theta3(i))*R36(3,3,i) ,                         cos(theta1(i))*cos(theta2(i)+theta3(i))*R36(1,3,i) + sin(theta1(i))*cos(theta2(i)+theta3(i))*R36(2,3,i) + sin(theta2(i)+theta3(i))*R36(3,3,i) );
+    theta4(i) = atan2( -cos(theta1(i))*sin(theta2(i)+theta3(i))*POSE(1,3) - sin(theta1(i))*sin(theta2(i)+theta3(i))*POSE(2,3) + cos(theta2(i)+theta3(i))*POSE(3,3) ,                         cos(theta1(i))*cos(theta2(i)+theta3(i))*POSE(1,3) + sin(theta1(i))*cos(theta2(i)+theta3(i))*POSE(2,3) + sin(theta2(i)+theta3(i))*POSE(3,3) );
 
     theta4b(i) = theta4(i)+pi;
 
-    theta5(i) = atan2( sqrt(1-(sin(theta1(i))*R36(1,3,i) - cos(theta1(i))*R36(2,3,i))^2),                         sin(theta1(i))*R36(1,3,i) - cos(theta1(i))*R36(2,3,i) );
+    theta5(i) = atan2( sqrt(1-(sin(theta1(i))*POSE(1,3) - cos(theta1(i))*POSE(2,3))^2),                         sin(theta1(i))*POSE(1,3) - cos(theta1(i))*POSE(2,3) );
 
-    theta5b(i)= atan2(-sqrt(1-(sin(theta1(i))*R36(1,3,i) - cos(theta1(i))*R36(2,3,i))^2),                         sin(theta1(i))*R36(1,3,i) - cos(theta1(i))*R36(2,3,i) );
+    theta5b(i)= atan2(-sqrt(1-(sin(theta1(i))*POSE(1,3) - cos(theta1(i))*POSE(2,3))^2),                         sin(theta1(i))*POSE(1,3) - cos(theta1(i))*POSE(2,3) );
 
-    theta6(i) = atan2(             sin(theta1(i))*R36(1,2,i) - cos(theta1(i))*R36(2,2,i),                        -sin(theta1(i))*R36(1,1,i) + cos(theta1(i))*R36(2,1,i));
+    theta6(i) = atan2(             sin(theta1(i))*POSE(1,2) - cos(theta1(i))*POSE(2,2),                        -sin(theta1(i))*POSE(1,1) + cos(theta1(i))*POSE(2,1));
 
     theta6b(i) = theta6(i)+pi;
 end
